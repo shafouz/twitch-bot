@@ -22,11 +22,13 @@ class Twitch
     @response_set.join
   end
 
+  # Useful for debug purposes
   def hello
     @logger.info("Bot started...")
     start
   end
 
+  # Log into the irc server and channel
   def start
     @socket.puts("CAP REQ :twitch.tv/membership")
     @socket.puts("PASS #{ENV["TWITCH_CHAT_TOKEN"]}")
@@ -34,6 +36,7 @@ class Twitch
     @socket.puts("JOIN ##{ENV["TWITCH_CHANNEL"]}")
   end
 
+  # Call the method if exists else print error
   def sender(message)
     message = message.to_sym
     if @commands.any?(message)
@@ -43,6 +46,7 @@ class Twitch
     end
   end
 
+  # Send input to proper method, also can be used as authenthication
   def response_listener(message)
     username = message[1]
     command = message[2]
@@ -58,6 +62,7 @@ class Twitch
     end
   end
 
+  # Prints messages from TCPsocket and listens to user input
   def response_get
     Thread.new do
       loop do
